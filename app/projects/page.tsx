@@ -6,11 +6,7 @@ import { Nav } from "@/components/Nav";
 import { StatusBadge } from "@/components/StatusBadge";
 import type { Project } from "@/lib/types";
 import { PHASES, STATUSES } from "@/lib/types";
-
-function money(n: number | null) {
-  if (n == null) return "—";
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-}
+import { formatMoney } from "@/lib/utils";
 
 export default function ProjectsListPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -102,10 +98,10 @@ export default function ProjectsListPage() {
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs mt-1 pt-3 border-t border-gray-100">
-                    <Stat label="UPB" value={money(p.upb)} />
-                    <Stat label="Undrawn" value={money(p.undrawn)} />
-                    <Stat label="Monthly" value={money(p.monthly_payment)} />
-                    <Stat label="ARV" value={money(p.implied_arv)} />
+                    <Stat label="UPB" value={formatMoney(p.upb)} />
+                    <Stat label="Undrawn" value={formatMoney(p.undrawn)} />
+                    <Stat label="Monthly" value={formatMoney(p.monthly_payment)} />
+                    <Stat label="ARV" value={formatMoney(p.implied_arv)} />
                   </div>
                 </Link>
               ))}
