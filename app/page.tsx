@@ -17,7 +17,8 @@ import { Avatar } from "@/components/Avatar";
 import { useActingAs } from "@/components/ActingAsProvider";
 import type { Project, Task } from "@/lib/types";
 import { PHASES } from "@/lib/types";
-import { formatDistanceToNow, isPast, parseISO } from "date-fns";
+import { formatDistanceToNow, parseISO } from "date-fns";
+import { isTaskOverdue } from "@/lib/utils";
 
 type Activity = {
   kind: "note" | "completed" | "created";
@@ -56,9 +57,7 @@ export default function DashboardPage() {
   const projectById = new Map(projects.map((p) => [p.id, p]));
 
   const activeTasks = tasks.filter((t) => t.status !== "done").length;
-  const overdueTasks = tasks.filter(
-    (t) => t.status !== "done" && t.due_date && isPast(parseISO(t.due_date)),
-  ).length;
+  const overdueTasks = tasks.filter(isTaskOverdue).length;
 
   const stats = [
     {

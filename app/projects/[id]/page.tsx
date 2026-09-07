@@ -27,12 +27,8 @@ import type {
   TaskStatus,
 } from "@/lib/types";
 import { STATUSES, TASK_PRIORITIES } from "@/lib/types";
-import { format, isPast, parseISO, formatDistanceToNow } from "date-fns";
-
-function money(n: number | null) {
-  if (n == null) return "—";
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-}
+import { format, parseISO, formatDistanceToNow } from "date-fns";
+import { formatMoney, isTaskOverdue } from "@/lib/utils";
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -124,10 +120,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const stats: { label: string; value: string; icon: typeof DollarSign }[] = [
-    { label: "UPB", value: money(project.upb), icon: DollarSign },
-    { label: "Undrawn", value: money(project.undrawn), icon: Banknote },
-    { label: "Monthly", value: money(project.monthly_payment), icon: CalendarDays },
-    { label: "Implied ARV", value: money(project.implied_arv), icon: TrendingUp },
+    { label: "UPB", value: formatMoney(project.upb), icon: DollarSign },
+    { label: "Undrawn", value: formatMoney(project.undrawn), icon: Banknote },
+    { label: "Monthly", value: formatMoney(project.monthly_payment), icon: CalendarDays },
+    { label: "Implied ARV", value: formatMoney(project.implied_arv), icon: TrendingUp },
   ];
 
   return (
@@ -231,10 +227,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             ) : (
               tasks.map((t) => {
                 const assignee = t.assignee_id ? peopleById.get(t.assignee_id) : null;
-                const overdue =
-                  t.status !== "done" &&
-                  t.due_date &&
-                  isPast(parseISO(t.due_date));
+                const overdue = isTaskOverdue(t);
                 return (
                   <li key={t.id} className="px-5 py-3 flex items-center gap-3">
                     <button
