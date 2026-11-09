@@ -6,11 +6,7 @@ import { Nav } from "@/components/Nav";
 import { StatusBadge } from "@/components/StatusBadge";
 import type { Project } from "@/lib/types";
 import { PHASES, STATUSES } from "@/lib/types";
-
-function money(n: number | null) {
-  if (n == null) return "—";
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-}
+import { money } from "@/lib/format";
 
 export default function ProjectsListPage() {
   const [projects, setProjects] = useState<Project[]>([]);
