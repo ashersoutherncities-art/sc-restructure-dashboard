@@ -27,12 +27,8 @@ import type {
   TaskStatus,
 } from "@/lib/types";
 import { STATUSES, TASK_PRIORITIES } from "@/lib/types";
+import { money } from "@/lib/format";
 import { format, isPast, parseISO, formatDistanceToNow } from "date-fns";
-
-function money(n: number | null) {
-  if (n == null) return "—";
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-}
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
